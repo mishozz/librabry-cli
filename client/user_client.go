@@ -12,6 +12,8 @@ type UserClient interface {
 	Logout(token string) (string, error)
 	TakeBook(token, email, isbn string) (string, error)
 	ReturnBook(token, email, isbn string) error
+	GetAllUsers(token string) (string, error)
+	GetUser(token, email string) (string, error)
 }
 
 type userClient struct{}
@@ -80,4 +82,26 @@ func (u userClient) ReturnBook(token, email, isbn string) error {
 	}
 
 	return nil
+}
+
+func (u userClient) GetAllUsers(token string) (string, error) {
+	req, _ := http.NewRequest("GET", HOST+PORT+LIBRARY_API_V1+"users", nil)
+	setAuthHeader(token, req)
+
+	respString, err := sendRequest(req)
+	if err != nil {
+		return "", err
+	}
+	return respString, nil
+}
+
+func (u userClient) GetUser(token, email string) (string, error) {
+	req, _ := http.NewRequest("GET", HOST+PORT+LIBRARY_API_V1+"users/"+email, nil)
+	setAuthHeader(token, req)
+
+	respString, err := sendRequest(req)
+	if err != nil {
+		return "", err
+	}
+	return respString, nil
 }

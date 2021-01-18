@@ -69,7 +69,7 @@ var returnBookCmd = &cobra.Command{
 		err := client.User.ReturnBook(token, email, isbn)
 		if err != nil {
 			if err == client.UnauthorizedErr {
-				fmt.Printf("Unathorized")
+				fmt.Printf("You need to be authorized to access this route")
 			} else {
 				fmt.Printf("Unable to return your book")
 			}
@@ -79,11 +79,46 @@ var returnBookCmd = &cobra.Command{
 	},
 }
 
+var getUsersCmd = &cobra.Command{
+	Use:   "get-all-users",
+	Short: "Get all users",
+	Long:  "Get all users of the library",
+	Run: func(cmd *cobra.Command, args []string) {
+		token, _ := cmd.Flags().GetString("token")
+
+		respString, err := client.User.GetAllUsers(token)
+		if err != nil {
+			fmt.Printf("Unable to fetch users")
+		} else {
+			fmt.Printf(respString)
+		}
+	},
+}
+
+var getUserCmd = &cobra.Command{
+	Use:   "get-user",
+	Short: "Get user of the library",
+	Long:  "Get user of the library",
+	Run: func(cmd *cobra.Command, args []string) {
+		token, _ := cmd.Flags().GetString("token")
+		email, _ := cmd.Flags().GetString("email")
+
+		respString, err := client.User.GetUser(token, email)
+		if err != nil {
+			fmt.Printf("Unable to fetch user with email %s", email)
+		} else {
+			fmt.Printf(respString)
+		}
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(loginCmd)
 	rootCmd.AddCommand(logoutCmd)
 	rootCmd.AddCommand(takeBookCmd)
 	rootCmd.AddCommand(returnBookCmd)
+	rootCmd.AddCommand(getUsersCmd)
+	rootCmd.AddCommand(getUserCmd)
 
 	loginCmd.Flags().StringP("email", "e", "", "Set your email")
 	loginCmd.MarkFlagRequired("email")
@@ -104,4 +139,12 @@ func init() {
 	returnBookCmd.MarkFlagRequired("token")
 	returnBookCmd.MarkFlagRequired("email")
 	returnBookCmd.MarkFlagRequired("isbn")
+
+	getUsersCmd.Flags().StringP("token", "t", "", "Your jwt token")
+	getUsersCmd.MarkFlagRequired("token")
+
+	getUserCmd.Flags().StringP("token", "t", "", "Your jwt token")
+	getUserCmd.Flags().StringP("email", "e", "", "Set your email")
+	getUserCmd.MarkFlagRequired("token")
+	getUserCmd.MarkFlagRequired("email")
 }

@@ -71,7 +71,11 @@ var deleteBookCmd = &cobra.Command{
 
 		err := client.Books.Delete(token, isbn)
 		if err != nil {
-			fmt.Printf("Unable to fetch book with isbn %s from library", isbn)
+			if err == client.UnauthorizedErr {
+				fmt.Printf("You need to be authorized to access this route")
+			} else {
+				fmt.Printf("Unable to delete book with isbn %s", isbn)
+			}
 
 		} else {
 			fmt.Printf("Book with isbn %s successfully deleted", isbn)
