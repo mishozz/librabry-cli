@@ -14,12 +14,12 @@ var getBooksCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		token, _ := cmd.Flags().GetString("token")
 
-		books, err := client.Books.GetAllBooks(token)
+		respString, err := client.Books.GetAllBooks(token)
 		if err != nil {
 			fmt.Printf("Unable to fetch books from library")
 
 		}
-		fmt.Printf(books)
+		fmt.Printf(respString)
 	},
 }
 
@@ -31,12 +31,12 @@ var getBookCmd = &cobra.Command{
 		token, _ := cmd.Flags().GetString("token")
 		isbn, _ := cmd.Flags().GetString("isbn")
 
-		book, err := client.Books.GetBook(token, isbn)
+		respString, err := client.Books.GetBook(token, isbn)
 		if err != nil {
 			fmt.Printf("Unable to fetch book with isbn %s from library", isbn)
 
 		}
-		fmt.Printf(book)
+		fmt.Printf(respString)
 	},
 }
 
@@ -51,12 +51,31 @@ var saveBookCmd = &cobra.Command{
 		units, _ := cmd.Flags().GetInt("units")
 		isbn, _ := cmd.Flags().GetString("isbn")
 
-		book, err := client.Books.SaveBook(token, isbn, title, author, units)
+		respString, err := client.Books.SaveBook(token, isbn, title, author, uint(units))
 		if err != nil {
 			fmt.Printf("Unable to save book with isbn %s", isbn)
 
+		} else {
+			fmt.Printf(respString)
 		}
-		fmt.Printf(book)
+	},
+}
+
+var deleteBookCmd = &cobra.Command{
+	Use:   "delete",
+	Short: "Delete specific book from the library",
+	Long:  "Delete specific book from the library",
+	Run: func(cmd *cobra.Command, args []string) {
+		token, _ := cmd.Flags().GetString("token")
+		isbn, _ := cmd.Flags().GetString("isbn")
+
+		err := client.Books.Delete(token, isbn)
+		if err != nil {
+			fmt.Printf("Unable to fetch book with isbn %s from library", isbn)
+
+		} else {
+			fmt.Printf("Book with isbn %s successfully deleted", isbn)
+		}
 	},
 }
 
@@ -64,6 +83,7 @@ func init() {
 	rootCmd.AddCommand(getBooksCmd)
 	rootCmd.AddCommand(getBookCmd)
 	rootCmd.AddCommand(saveBookCmd)
+	rootCmd.AddCommand(deleteBookCmd)
 
 	getBooksCmd.Flags().StringP("token", "t", "", "Your jwt token")
 	getBooksCmd.MarkFlagRequired("token")
@@ -72,6 +92,11 @@ func init() {
 	getBookCmd.Flags().StringP("token", "t", "", "Your jwt token")
 	getBookCmd.MarkFlagRequired("isbn")
 	getBookCmd.MarkFlagRequired("token")
+
+	deleteBookCmd.Flags().StringP("isbn", "i", "", "Isbn of the book")
+	deleteBookCmd.Flags().StringP("token", "t", "", "Your jwt token")
+	deleteBookCmd.MarkFlagRequired("isbn")
+	deleteBookCmd.MarkFlagRequired("token")
 
 	saveBookCmd.Flags().StringP("isbn", "i", "", "Isbn of the book")
 	saveBookCmd.Flags().StringP("title", "n", "", "Title of the book")

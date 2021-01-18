@@ -2,6 +2,8 @@ package client
 
 import (
 	"bytes"
+	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -16,10 +18,18 @@ const (
 type BookClient interface {
 	GetAllBooks(token string) (string, error)
 	GetBook(token, isbn string) (string, error)
-	SaveBook(token, isbn, title, author string, availableUnits int) (string, error)
+	SaveBook(token, isbn, title, author string, availableUnits uint) (string, error)
+	Delete(token, isbn string) error
 }
 
 type bookClient struct{}
+
+type BookDetails struct {
+	Isbn           string `json:"Isbn"`
+	Title          string `json:"Title"`
+	Author         string `json:"Author"`
+	AvailableUnits uint   `json:"AvailableUnits" `
+}
 
 var Books BookClient = &bookClient{}
 
@@ -44,14 +54,19 @@ func (b bookClient) GetBook(token, isbn string) (string, error) {
 	}
 	return respString, nil
 }
-func (b bookClient) SaveBook(token, isbn, title, author string, availableUnits int) (string, error) {
-	jsonprep := `{"Isbn":"` + isbn +
-		`","Title":"` + title +
-		`","Author:"` + author +
-		`","AvailableUnits":"` + fmt.Sprint(availableUnits) + `"}`
-	jsonStr := []byte(jsonprep)
+func (b bookClient) SaveBook(token, isbn, title, author string, availableUnits uint) (string, error) {
+	book := &BookDetails{
+		Isbn:           isbn,
+		Title:          title,
+		Author:         author,
+		AvailableUnits: availableUnits,
+	}
+	jsonData, err := json.Marshal(book)
+	if err != nil {
+		return "", err
+	}
 
-	req, _ := http.NewRequest("POST", HOST+PORT+LIBRARY_API_V1+"books", bytes.NewBuffer(jsonStr))
+	req, _ := http.NewRequest("POST", HOST+PORT+LIBRARY_API_V1+"books", bytes.NewBuffer(jsonData))
 	setAuthHeader(token, req)
 
 	respString, err := sendRequest(req)
@@ -59,6 +74,25 @@ func (b bookClient) SaveBook(token, isbn, title, author string, availableUnits i
 		return "", err
 	}
 	return respString, nil
+}
+
+func (b bookClient) Delete(token, isbn string) error {
+	req, _ := http.NewRequest("DELETE", HOST+PORT+LIBRARY_API_V1+"books/"+isbn, nil)
+	setAuthHeader(token, req)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode == http.StatusUnauthorized {
+		return UnauthorizedErr
+	} else if resp.StatusCode != http.StatusNoContent {
+		return errors.New("Unable to delete book")
+	}
+
+	return nil
 }
 
 func setAuthHeader(token string, req *http.Request) {

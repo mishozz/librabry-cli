@@ -4,9 +4,11 @@ import (
 	"github.com/mishozz/library-cli/cli"
 )
 
-type UserDetails struct {
-	email string
-}
+const (
+	HOST           = "http://localhost:"
+	PORT           = "8080"
+	LIBRARY_API_V1 = "/library/api/v1/"
+)
 
 func main() {
 	cli.Execute()
