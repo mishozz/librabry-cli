@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -22,7 +21,9 @@ type BookClient interface {
 	Delete(token, isbn string) error
 }
 
-type bookClient struct{}
+type bookClient struct {
+	client HttpClient
+}
 
 type BookDetails struct {
 	Isbn           string `json:"Isbn"`
@@ -31,13 +32,15 @@ type BookDetails struct {
 	AvailableUnits uint   `json:"AvailableUnits" `
 }
 
-var Books BookClient = &bookClient{}
+var Books BookClient = &bookClient{
+	client: Http,
+}
 
 func (b bookClient) GetAllBooks(token string) (string, error) {
 	req, _ := http.NewRequest("GET", HOST+PORT+LIBRARY_API_V1+"books", nil)
 	setAuthHeader(token, req)
 
-	respString, err := sendRequest(req)
+	respString, err := b.client.SendRequest(req)
 	if err != nil {
 		return "", err
 	}
@@ -48,7 +51,7 @@ func (b bookClient) GetBook(token, isbn string) (string, error) {
 	req, _ := http.NewRequest("GET", HOST+PORT+LIBRARY_API_V1+"books/"+isbn, nil)
 	setAuthHeader(token, req)
 
-	respString, err := sendRequest(req)
+	respString, err := b.client.SendRequest(req)
 	if err != nil {
 		return "", err
 	}
@@ -69,7 +72,7 @@ func (b bookClient) SaveBook(token, isbn, title, author string, availableUnits u
 	req, _ := http.NewRequest("POST", HOST+PORT+LIBRARY_API_V1+"books", bytes.NewBuffer(jsonData))
 	setAuthHeader(token, req)
 
-	respString, err := sendRequest(req)
+	respString, err := b.client.SendRequest(req)
 	if err != nil {
 		return "", err
 	}
@@ -98,21 +101,4 @@ func (b bookClient) Delete(token, isbn string) error {
 func setAuthHeader(token string, req *http.Request) {
 	tokenString := fmt.Sprintf("Bearer %v", token)
 	req.Header.Set("Authorization", tokenString)
-}
-
-func sendRequest(req *http.Request) (string, error) {
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		return "", err
-	}
-	defer resp.Body.Close()
-
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return "", err
-	}
-	bodyString := string(bodyBytes)
-
-	return bodyString, nil
 }

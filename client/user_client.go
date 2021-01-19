@@ -16,7 +16,9 @@ type UserClient interface {
 	GetUser(token, email string) (string, error)
 }
 
-type userClient struct{}
+type userClient struct {
+	client HttpClient
+}
 
 type UserDetails struct {
 	Email string `json:"email"`
@@ -24,7 +26,9 @@ type UserDetails struct {
 
 var UnauthorizedErr = errors.New("Unauthorized")
 
-var User UserClient = &userClient{}
+var User UserClient = &userClient{
+	client: Http,
+}
 
 func (u userClient) Login(email, password string) (string, error) {
 	user := &UserDetails{
@@ -36,7 +40,7 @@ func (u userClient) Login(email, password string) (string, error) {
 	}
 	req, _ := http.NewRequest("POST", HOST+PORT+LIBRARY_API_V1+"login", bytes.NewBuffer(jsonData))
 
-	respString, err := sendRequest(req)
+	respString, err := u.client.SendRequest(req)
 	if err != nil {
 		return "", err
 	}
@@ -47,7 +51,7 @@ func (u userClient) Logout(token string) (string, error) {
 	req, _ := http.NewRequest("POST", HOST+PORT+LIBRARY_API_V1+"logout", nil)
 	setAuthHeader(token, req)
 
-	respString, err := sendRequest(req)
+	respString, err := u.client.SendRequest(req)
 	if err != nil {
 		return "", err
 	}
@@ -58,7 +62,7 @@ func (u userClient) TakeBook(token, email, isbn string) (string, error) {
 	req, _ := http.NewRequest("POST", HOST+PORT+LIBRARY_API_V1+"users/"+email+"/"+isbn, nil)
 	setAuthHeader(token, req)
 
-	respString, err := sendRequest(req)
+	respString, err := u.client.SendRequest(req)
 	if err != nil {
 		return "", err
 	}
@@ -88,7 +92,7 @@ func (u userClient) GetAllUsers(token string) (string, error) {
 	req, _ := http.NewRequest("GET", HOST+PORT+LIBRARY_API_V1+"users", nil)
 	setAuthHeader(token, req)
 
-	respString, err := sendRequest(req)
+	respString, err := u.client.SendRequest(req)
 	if err != nil {
 		return "", err
 	}
@@ -99,7 +103,7 @@ func (u userClient) GetUser(token, email string) (string, error) {
 	req, _ := http.NewRequest("GET", HOST+PORT+LIBRARY_API_V1+"users/"+email, nil)
 	setAuthHeader(token, req)
 
-	respString, err := sendRequest(req)
+	respString, err := u.client.SendRequest(req)
 	if err != nil {
 		return "", err
 	}
