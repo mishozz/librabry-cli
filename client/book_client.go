@@ -83,8 +83,7 @@ func (b bookClient) Delete(token, isbn string) error {
 	req, _ := http.NewRequest("DELETE", HOST+PORT+LIBRARY_API_V1+"books/"+isbn, nil)
 	setAuthHeader(token, req)
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	resp, err := b.client.Do(req)
 	if err != nil {
 		return err
 	}
