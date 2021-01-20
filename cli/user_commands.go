@@ -17,10 +17,10 @@ func NewLoginCmd(client client.UserClient) *cobra.Command {
 
 			token, err := client.Login(email, "")
 			if err != nil {
-				fmt.Printf("Unable to login. Check your username and password")
+				fmt.Fprintf(cmd.OutOrStdout(), "Unable to login. Check your username and password")
 			} else {
-				fmt.Println("Login succesful.")
-				fmt.Printf("Your token is: %s", token)
+				fmt.Fprintf(cmd.OutOrStdout(), "Login succesful.")
+				fmt.Fprintf(cmd.OutOrStdout(), "Your token is: %s", token)
 			}
 		},
 	}
@@ -33,11 +33,11 @@ func NewLogoutCmd(client client.UserClient) *cobra.Command {
 		Long:  "Logout from your account",
 		Run: func(cmd *cobra.Command, args []string) {
 			token, _ := cmd.Flags().GetString("token")
-			msg, err := client.Logout(token)
+			respString, err := client.Logout(token)
 			if err != nil {
-				fmt.Printf("Unable to logout. Check you token!")
+				fmt.Fprintf(cmd.OutOrStdout(), "Unable to logout. Check you token!")
 			} else {
-				fmt.Printf(msg)
+				fmt.Fprintf(cmd.OutOrStdout(), respString)
 			}
 		},
 	}
@@ -53,11 +53,11 @@ func NewTakeBookCmd(client client.UserClient) *cobra.Command {
 			email, _ := cmd.Flags().GetString("email")
 			isbn, _ := cmd.Flags().GetString("isbn")
 
-			msg, err := client.TakeBook(token, email, isbn)
+			respString, err := client.TakeBook(token, email, isbn)
 			if err != nil {
-				fmt.Printf("Unable to take book from the library")
+				fmt.Fprintf(cmd.OutOrStdout(), "Unable to take book from the library")
 			} else {
-				fmt.Printf(msg)
+				fmt.Fprintf(cmd.OutOrStdout(), respString)
 			}
 		},
 	}
@@ -76,12 +76,12 @@ func NewReturnBookCmd(userClient client.UserClient) *cobra.Command {
 			err := userClient.ReturnBook(token, email, isbn)
 			if err != nil {
 				if err == client.UnauthorizedErr {
-					fmt.Printf("You need to be authorized to access this route")
+					fmt.Fprintf(cmd.OutOrStdout(), "You need to be authorized to access this route")
 				} else {
-					fmt.Printf("Unable to return your book")
+					fmt.Fprintf(cmd.OutOrStdout(), "Unable to return your book")
 				}
 			} else {
-				fmt.Printf("Successfully returned you book")
+				fmt.Fprintf(cmd.OutOrStdout(), "Successfully returned you book")
 			}
 		},
 	}
@@ -97,9 +97,9 @@ func NewGetUsersCmd(client client.UserClient) *cobra.Command {
 
 			respString, err := client.GetAllUsers(token)
 			if err != nil {
-				fmt.Printf("Unable to fetch users")
+				fmt.Fprintf(cmd.OutOrStdout(), "Unable to fetch users")
 			} else {
-				fmt.Printf(respString)
+				fmt.Fprintf(cmd.OutOrStdout(), respString)
 			}
 		},
 	}
@@ -116,9 +116,9 @@ func NewGetUserCmd(client client.UserClient) *cobra.Command {
 
 			respString, err := client.GetUser(token, email)
 			if err != nil {
-				fmt.Printf("Unable to fetch user with email %s", email)
+				fmt.Fprintf(cmd.OutOrStdout(), "Unable to fetch user with email %s", email)
 			} else {
-				fmt.Printf(respString)
+				fmt.Fprintf(cmd.OutOrStdout(), respString)
 			}
 		},
 	}
