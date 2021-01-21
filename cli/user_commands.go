@@ -19,7 +19,7 @@ func NewLoginCmd(client client.UserClient) *cobra.Command {
 			if err != nil {
 				fmt.Fprintf(cmd.OutOrStdout(), "Unable to login. Check your username and password")
 			} else {
-				fmt.Fprintf(cmd.OutOrStdout(), "Login succesful.")
+				fmt.Fprintf(cmd.OutOrStdout(), "Login succesful. ")
 				fmt.Fprintf(cmd.OutOrStdout(), "Your token is: %s", token)
 			}
 		},
