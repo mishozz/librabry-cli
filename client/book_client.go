@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	HOST         = "http://localhost:"
-	PORT         = "8080"
+	host         = "http://localhost:"
+	port         = "8080"
 	libraryApiV1 = "/library/api/v1/"
 )
 
@@ -36,12 +36,13 @@ type BookDetails struct {
 	AvailableUnits uint   `json:"AvailableUnits" `
 }
 
+// Books is book cline which can be used for mocking
 var Books BookClient = &bookClient{
 	client: HTTP,
 }
 
 func (b bookClient) GetAllBooks(token string) (string, error) {
-	req, _ := http.NewRequest("GET", HOST+PORT+libraryApiV1+"books", nil)
+	req, _ := http.NewRequest("GET", host+port+libraryApiV1+"books", nil)
 	setAuthHeader(token, req)
 
 	respString, err := b.client.SendRequest(req)
@@ -52,7 +53,7 @@ func (b bookClient) GetAllBooks(token string) (string, error) {
 }
 
 func (b bookClient) GetBook(token, isbn string) (string, error) {
-	req, _ := http.NewRequest("GET", HOST+PORT+libraryApiV1+"books/"+isbn, nil)
+	req, _ := http.NewRequest("GET", host+port+libraryApiV1+"books/"+isbn, nil)
 	setAuthHeader(token, req)
 
 	respString, err := b.client.SendRequest(req)
@@ -73,7 +74,7 @@ func (b bookClient) SaveBook(token, isbn, title, author string, availableUnits u
 		return "", err
 	}
 
-	req, _ := http.NewRequest("POST", HOST+PORT+libraryApiV1+"books", bytes.NewBuffer(jsonData))
+	req, _ := http.NewRequest("POST", host+port+libraryApiV1+"books", bytes.NewBuffer(jsonData))
 	setAuthHeader(token, req)
 
 	respString, err := b.client.SendRequest(req)
@@ -84,7 +85,7 @@ func (b bookClient) SaveBook(token, isbn, title, author string, availableUnits u
 }
 
 func (b bookClient) Delete(token, isbn string) error {
-	req, _ := http.NewRequest("DELETE", HOST+PORT+libraryApiV1+"books/"+isbn, nil)
+	req, _ := http.NewRequest("DELETE", host+port+libraryApiV1+"books/"+isbn, nil)
 	setAuthHeader(token, req)
 
 	resp, err := b.client.Do(req)

@@ -44,7 +44,7 @@ func (u userClient) Login(email, password string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	req, _ := http.NewRequest("POST", HOST+PORT+libraryApiV1+"login", bytes.NewBuffer(jsonData))
+	req, _ := http.NewRequest("POST", host+port+libraryApiV1+"login", bytes.NewBuffer(jsonData))
 
 	respString, err := u.client.SendRequest(req)
 	if err != nil {
@@ -54,7 +54,7 @@ func (u userClient) Login(email, password string) (string, error) {
 }
 
 func (u userClient) Logout(token string) (string, error) {
-	req, _ := http.NewRequest("POST", HOST+PORT+libraryApiV1+"logout", nil)
+	req, _ := http.NewRequest("POST", host+port+libraryApiV1+"logout", nil)
 	setAuthHeader(token, req)
 
 	respString, err := u.client.SendRequest(req)
@@ -65,7 +65,7 @@ func (u userClient) Logout(token string) (string, error) {
 }
 
 func (u userClient) TakeBook(token, email, isbn string) (string, error) {
-	req, _ := http.NewRequest("POST", HOST+PORT+libraryApiV1+"users/"+email+"/"+isbn, nil)
+	req, _ := http.NewRequest("POST", host+port+libraryApiV1+"users/"+email+"/"+isbn, nil)
 	setAuthHeader(token, req)
 
 	respString, err := u.client.SendRequest(req)
@@ -76,7 +76,7 @@ func (u userClient) TakeBook(token, email, isbn string) (string, error) {
 }
 
 func (u userClient) ReturnBook(token, email, isbn string) error {
-	req, _ := http.NewRequest("DELETE", HOST+PORT+libraryApiV1+"users/"+email+"/"+isbn, nil)
+	req, _ := http.NewRequest("DELETE", host+port+libraryApiV1+"users/"+email+"/"+isbn, nil)
 	setAuthHeader(token, req)
 
 	resp, err := u.client.Do(req)
@@ -94,7 +94,7 @@ func (u userClient) ReturnBook(token, email, isbn string) error {
 }
 
 func (u userClient) GetAllUsers(token string) (string, error) {
-	req, _ := http.NewRequest("GET", HOST+PORT+libraryApiV1+"users", nil)
+	req, _ := http.NewRequest("GET", host+port+libraryApiV1+"users", nil)
 	setAuthHeader(token, req)
 
 	respString, err := u.client.SendRequest(req)
@@ -105,7 +105,7 @@ func (u userClient) GetAllUsers(token string) (string, error) {
 }
 
 func (u userClient) GetUser(token, email string) (string, error) {
-	req, _ := http.NewRequest("GET", HOST+PORT+libraryApiV1+"users/"+email, nil)
+	req, _ := http.NewRequest("GET", host+port+libraryApiV1+"users/"+email, nil)
 	setAuthHeader(token, req)
 
 	respString, err := u.client.SendRequest(req)
