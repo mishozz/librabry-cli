@@ -258,7 +258,7 @@ func Test_ReturnBook(t *testing.T) {
 			m.On("ReturnBook", mock.Anything, mock.Anything, mock.Anything).Return(nil)
 			return m
 		},
-		expectedOutput: "Successfully returned you book",
+		expectedOutput: "Successfully returned your book",
 	}, {
 		name: "error while taking book",
 		mockUserClient: func(m *mockUserClient) *mockUserClient {

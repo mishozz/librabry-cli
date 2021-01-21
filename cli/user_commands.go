@@ -85,7 +85,7 @@ func NewReturnBookCmd(userClient client.UserClient) *cobra.Command {
 					fmt.Fprintf(cmd.OutOrStdout(), "Unable to return your book")
 				}
 			} else {
-				fmt.Fprintf(cmd.OutOrStdout(), "Successfully returned you book")
+				fmt.Fprintf(cmd.OutOrStdout(), "Successfully returned your book")
 			}
 		},
 	}
