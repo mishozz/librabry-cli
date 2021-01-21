@@ -12,12 +12,12 @@ import (
 func Test_UserClient_GetAllUsers(t *testing.T) {
 	tests := []struct {
 		name           string
-		mockHttpClient func(m *mockHttpClient) *mockHttpClient
+		mockHTTPClient func(m *mockHTTPClient) *mockHTTPClient
 		expectedString string
 		err            error
 	}{{
 		name: "success",
-		mockHttpClient: func(m *mockHttpClient) *mockHttpClient {
+		mockHTTPClient: func(m *mockHTTPClient) *mockHTTPClient {
 			m.On("SendRequest", mock.Anything).Return("users", nil)
 			return m
 		},
@@ -25,7 +25,7 @@ func Test_UserClient_GetAllUsers(t *testing.T) {
 		err:            nil,
 	}, {
 		name: "error while sending request",
-		mockHttpClient: func(m *mockHttpClient) *mockHttpClient {
+		mockHTTPClient: func(m *mockHTTPClient) *mockHTTPClient {
 			m.On("SendRequest", mock.Anything).Return("", errors.New("error"))
 			return m
 		},
@@ -35,9 +35,9 @@ func Test_UserClient_GetAllUsers(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			m := &mockHttpClient{}
+			m := &mockHTTPClient{}
 			u := &userClient{
-				client: tt.mockHttpClient(m),
+				client: tt.mockHTTPClient(m),
 			}
 			respStr, err := u.GetAllUsers("test")
 			if err != nil {
@@ -51,12 +51,12 @@ func Test_UserClient_GetAllUsers(t *testing.T) {
 func Test_UserClient_GetUser(t *testing.T) {
 	tests := []struct {
 		name           string
-		mockHttpClient func(m *mockHttpClient) *mockHttpClient
+		mockHTTPClient func(m *mockHTTPClient) *mockHTTPClient
 		expectedString string
 		err            error
 	}{{
 		name: "success",
-		mockHttpClient: func(m *mockHttpClient) *mockHttpClient {
+		mockHTTPClient: func(m *mockHTTPClient) *mockHTTPClient {
 			m.On("SendRequest", mock.Anything).Return("users", nil)
 			return m
 		},
@@ -64,7 +64,7 @@ func Test_UserClient_GetUser(t *testing.T) {
 		err:            nil,
 	}, {
 		name: "error while sending request",
-		mockHttpClient: func(m *mockHttpClient) *mockHttpClient {
+		mockHTTPClient: func(m *mockHTTPClient) *mockHTTPClient {
 			m.On("SendRequest", mock.Anything).Return("", errors.New("error"))
 			return m
 		},
@@ -74,9 +74,9 @@ func Test_UserClient_GetUser(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			m := &mockHttpClient{}
+			m := &mockHTTPClient{}
 			u := &userClient{
-				client: tt.mockHttpClient(m),
+				client: tt.mockHTTPClient(m),
 			}
 			respStr, err := u.GetUser("test", "email")
 			if err != nil {
@@ -90,12 +90,12 @@ func Test_UserClient_GetUser(t *testing.T) {
 func Test_UserClient_Login(t *testing.T) {
 	tests := []struct {
 		name           string
-		mockHttpClient func(m *mockHttpClient) *mockHttpClient
+		mockHTTPClient func(m *mockHTTPClient) *mockHTTPClient
 		expectedString string
 		err            error
 	}{{
 		name: "success",
-		mockHttpClient: func(m *mockHttpClient) *mockHttpClient {
+		mockHTTPClient: func(m *mockHTTPClient) *mockHTTPClient {
 			m.On("SendRequest", mock.Anything).Return("users", nil)
 			return m
 		},
@@ -103,7 +103,7 @@ func Test_UserClient_Login(t *testing.T) {
 		err:            nil,
 	}, {
 		name: "error while sending request",
-		mockHttpClient: func(m *mockHttpClient) *mockHttpClient {
+		mockHTTPClient: func(m *mockHTTPClient) *mockHTTPClient {
 			m.On("SendRequest", mock.Anything).Return("", errors.New("error"))
 			return m
 		},
@@ -113,9 +113,9 @@ func Test_UserClient_Login(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			m := &mockHttpClient{}
+			m := &mockHTTPClient{}
 			u := &userClient{
-				client: tt.mockHttpClient(m),
+				client: tt.mockHTTPClient(m),
 			}
 			respStr, err := u.Login("email", "password")
 			if err != nil {
@@ -129,12 +129,12 @@ func Test_UserClient_Login(t *testing.T) {
 func Test_UserClient_Logout(t *testing.T) {
 	tests := []struct {
 		name           string
-		mockHttpClient func(m *mockHttpClient) *mockHttpClient
+		mockHTTPClient func(m *mockHTTPClient) *mockHTTPClient
 		expectedString string
 		err            error
 	}{{
 		name: "success",
-		mockHttpClient: func(m *mockHttpClient) *mockHttpClient {
+		mockHTTPClient: func(m *mockHTTPClient) *mockHTTPClient {
 			m.On("SendRequest", mock.Anything).Return("users", nil)
 			return m
 		},
@@ -142,7 +142,7 @@ func Test_UserClient_Logout(t *testing.T) {
 		err:            nil,
 	}, {
 		name: "error while sending request",
-		mockHttpClient: func(m *mockHttpClient) *mockHttpClient {
+		mockHTTPClient: func(m *mockHTTPClient) *mockHTTPClient {
 			m.On("SendRequest", mock.Anything).Return("", errors.New("error"))
 			return m
 		},
@@ -152,9 +152,9 @@ func Test_UserClient_Logout(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			m := &mockHttpClient{}
+			m := &mockHTTPClient{}
 			u := &userClient{
-				client: tt.mockHttpClient(m),
+				client: tt.mockHTTPClient(m),
 			}
 			respStr, err := u.Logout("test")
 			if err != nil {
@@ -168,12 +168,12 @@ func Test_UserClient_Logout(t *testing.T) {
 func Test_UserClient_TakeBook(t *testing.T) {
 	tests := []struct {
 		name           string
-		mockHttpClient func(m *mockHttpClient) *mockHttpClient
+		mockHTTPClient func(m *mockHTTPClient) *mockHTTPClient
 		expectedString string
 		err            error
 	}{{
 		name: "success",
-		mockHttpClient: func(m *mockHttpClient) *mockHttpClient {
+		mockHTTPClient: func(m *mockHTTPClient) *mockHTTPClient {
 			m.On("SendRequest", mock.Anything).Return("success", nil)
 			return m
 		},
@@ -181,7 +181,7 @@ func Test_UserClient_TakeBook(t *testing.T) {
 		err:            nil,
 	}, {
 		name: "error while sending request",
-		mockHttpClient: func(m *mockHttpClient) *mockHttpClient {
+		mockHTTPClient: func(m *mockHTTPClient) *mockHTTPClient {
 			m.On("SendRequest", mock.Anything).Return("", errors.New("error"))
 			return m
 		},
@@ -191,9 +191,9 @@ func Test_UserClient_TakeBook(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			m := &mockHttpClient{}
+			m := &mockHTTPClient{}
 			u := &userClient{
-				client: tt.mockHttpClient(m),
+				client: tt.mockHTTPClient(m),
 			}
 			respStr, err := u.TakeBook("test", "email", "isbn")
 			if err != nil {
@@ -207,25 +207,25 @@ func Test_UserClient_TakeBook(t *testing.T) {
 func Test_BookClient_ReturnBook(t *testing.T) {
 	tests := []struct {
 		name           string
-		mockHttpClient func(m *mockHttpClient) *mockHttpClient
+		mockHTTPClient func(m *mockHTTPClient) *mockHTTPClient
 		err            error
 	}{{
 		name: "success",
-		mockHttpClient: func(m *mockHttpClient) *mockHttpClient {
+		mockHTTPClient: func(m *mockHTTPClient) *mockHTTPClient {
 			m.On("Do", mock.Anything).Return(&http.Response{StatusCode: 204}, nil)
 			return m
 		},
 		err: nil,
 	}, {
 		name: "Unauthorized",
-		mockHttpClient: func(m *mockHttpClient) *mockHttpClient {
+		mockHTTPClient: func(m *mockHTTPClient) *mockHTTPClient {
 			m.On("Do", mock.Anything).Return(&http.Response{StatusCode: 401}, nil)
 			return m
 		},
 		err: errors.New("Unauthorized"),
 	}, {
 		name: "unable to delete book",
-		mockHttpClient: func(m *mockHttpClient) *mockHttpClient {
+		mockHTTPClient: func(m *mockHTTPClient) *mockHTTPClient {
 			m.On("Do", mock.Anything).Return(&http.Response{StatusCode: 500}, nil)
 			return m
 		},
@@ -234,9 +234,9 @@ func Test_BookClient_ReturnBook(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			m := &mockHttpClient{}
+			m := &mockHTTPClient{}
 			u := &userClient{
-				client: tt.mockHttpClient(m),
+				client: tt.mockHTTPClient(m),
 			}
 			err := u.ReturnBook("test", "email", "isbn")
 			if err != nil {

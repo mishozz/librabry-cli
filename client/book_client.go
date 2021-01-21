@@ -9,11 +9,14 @@ import (
 )
 
 const (
-	HOST           = "http://localhost:"
-	PORT           = "8080"
-	LIBRARY_API_V1 = "/library/api/v1/"
+	HOST         = "http://localhost:"
+	PORT         = "8080"
+	libraryApiV1 = "/library/api/v1/"
 )
 
+// BookClient is an interface with methods which will call the library REST API
+//
+// we can use this interface to mock out unit testing calls
 type BookClient interface {
 	GetAllBooks(token string) (string, error)
 	GetBook(token, isbn string) (string, error)
@@ -22,9 +25,10 @@ type BookClient interface {
 }
 
 type bookClient struct {
-	client HttpClient
+	client HTTPClient
 }
 
+// BookDetails holds the details of a book so we can parse it to json
 type BookDetails struct {
 	Isbn           string `json:"Isbn"`
 	Title          string `json:"Title"`
@@ -33,11 +37,11 @@ type BookDetails struct {
 }
 
 var Books BookClient = &bookClient{
-	client: Http,
+	client: HTTP,
 }
 
 func (b bookClient) GetAllBooks(token string) (string, error) {
-	req, _ := http.NewRequest("GET", HOST+PORT+LIBRARY_API_V1+"books", nil)
+	req, _ := http.NewRequest("GET", HOST+PORT+libraryApiV1+"books", nil)
 	setAuthHeader(token, req)
 
 	respString, err := b.client.SendRequest(req)
@@ -48,7 +52,7 @@ func (b bookClient) GetAllBooks(token string) (string, error) {
 }
 
 func (b bookClient) GetBook(token, isbn string) (string, error) {
-	req, _ := http.NewRequest("GET", HOST+PORT+LIBRARY_API_V1+"books/"+isbn, nil)
+	req, _ := http.NewRequest("GET", HOST+PORT+libraryApiV1+"books/"+isbn, nil)
 	setAuthHeader(token, req)
 
 	respString, err := b.client.SendRequest(req)
@@ -69,7 +73,7 @@ func (b bookClient) SaveBook(token, isbn, title, author string, availableUnits u
 		return "", err
 	}
 
-	req, _ := http.NewRequest("POST", HOST+PORT+LIBRARY_API_V1+"books", bytes.NewBuffer(jsonData))
+	req, _ := http.NewRequest("POST", HOST+PORT+libraryApiV1+"books", bytes.NewBuffer(jsonData))
 	setAuthHeader(token, req)
 
 	respString, err := b.client.SendRequest(req)
@@ -80,7 +84,7 @@ func (b bookClient) SaveBook(token, isbn, title, author string, availableUnits u
 }
 
 func (b bookClient) Delete(token, isbn string) error {
-	req, _ := http.NewRequest("DELETE", HOST+PORT+LIBRARY_API_V1+"books/"+isbn, nil)
+	req, _ := http.NewRequest("DELETE", HOST+PORT+libraryApiV1+"books/"+isbn, nil)
 	setAuthHeader(token, req)
 
 	resp, err := b.client.Do(req)

@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// NewLoginCmd return cobra command for login
 func NewLoginCmd(client client.UserClient) *cobra.Command {
 	return &cobra.Command{
 		Use:   "login",
@@ -26,6 +27,7 @@ func NewLoginCmd(client client.UserClient) *cobra.Command {
 	}
 }
 
+// NewLogoutCmd return cobra command for logout
 func NewLogoutCmd(client client.UserClient) *cobra.Command {
 	return &cobra.Command{
 		Use:   "logout",
@@ -43,6 +45,7 @@ func NewLogoutCmd(client client.UserClient) *cobra.Command {
 	}
 }
 
+// NewTakeBookCmd return cobra command for taking a book
 func NewTakeBookCmd(client client.UserClient) *cobra.Command {
 	return &cobra.Command{
 		Use:   "take",
@@ -63,6 +66,7 @@ func NewTakeBookCmd(client client.UserClient) *cobra.Command {
 	}
 }
 
+// NewReturnBookCmd return cobra command for returning a book
 func NewReturnBookCmd(userClient client.UserClient) *cobra.Command {
 	return &cobra.Command{
 		Use:   "return",
@@ -87,6 +91,7 @@ func NewReturnBookCmd(userClient client.UserClient) *cobra.Command {
 	}
 }
 
+// NewGetUsersCmd return cobra command for getting all of the users
 func NewGetUsersCmd(client client.UserClient) *cobra.Command {
 	return &cobra.Command{
 		Use:   "get-all-users",
@@ -105,6 +110,7 @@ func NewGetUsersCmd(client client.UserClient) *cobra.Command {
 	}
 }
 
+// NewGetUserCmd return cobra command for getting a user
 func NewGetUserCmd(client client.UserClient) *cobra.Command {
 	return &cobra.Command{
 		Use:   "get-user",

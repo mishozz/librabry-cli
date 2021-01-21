@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// NewGetBooksCmd returns cobra command for getting all book
 func NewGetBooksCmd(client client.BookClient) *cobra.Command {
 	return &cobra.Command{
 		Use:   "get-all",
@@ -24,6 +25,7 @@ func NewGetBooksCmd(client client.BookClient) *cobra.Command {
 	}
 }
 
+// NewGetBookCmd returns cobra command for getting a book
 func NewGetBookCmd(client client.BookClient) *cobra.Command {
 	return &cobra.Command{
 		Use:   "get",
@@ -42,6 +44,7 @@ func NewGetBookCmd(client client.BookClient) *cobra.Command {
 	}
 }
 
+// NewSaveBookCmd returns cobra command for saving a book
 func NewSaveBookCmd(client client.BookClient) *cobra.Command {
 	return &cobra.Command{
 		Use:   "save",
@@ -64,6 +67,7 @@ func NewSaveBookCmd(client client.BookClient) *cobra.Command {
 	}
 }
 
+// NewDeleteBookCmd returns cobra command for deleting a book
 func NewDeleteBookCmd(bookClient client.BookClient) *cobra.Command {
 	return &cobra.Command{
 		Use:   "delete",

@@ -9,11 +9,11 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-type mockHttpClient struct {
+type mockHTTPClient struct {
 	mock.Mock
 }
 
-func (m *mockHttpClient) SendRequest(req *http.Request) (str string, err error) {
+func (m *mockHTTPClient) SendRequest(req *http.Request) (str string, err error) {
 	args := m.Called(req)
 	if args.Get(0) == nil {
 		return
@@ -21,7 +21,7 @@ func (m *mockHttpClient) SendRequest(req *http.Request) (str string, err error) 
 	return args.Get(0).(string), args.Error(1)
 }
 
-func (m *mockHttpClient) Do(req *http.Request) (res *http.Response, err error) {
+func (m *mockHTTPClient) Do(req *http.Request) (res *http.Response, err error) {
 	args := m.Called(req)
 	if args.Get(0) == nil {
 		return
@@ -32,12 +32,12 @@ func (m *mockHttpClient) Do(req *http.Request) (res *http.Response, err error) {
 func Test_BookClient_GetAllBook(t *testing.T) {
 	tests := []struct {
 		name           string
-		mockHttpClient func(m *mockHttpClient) *mockHttpClient
+		mockHTTPClient func(m *mockHTTPClient) *mockHTTPClient
 		expectedString string
 		err            error
 	}{{
 		name: "success",
-		mockHttpClient: func(m *mockHttpClient) *mockHttpClient {
+		mockHTTPClient: func(m *mockHTTPClient) *mockHTTPClient {
 			m.On("SendRequest", mock.Anything).Return("all books", nil)
 			return m
 		},
@@ -45,7 +45,7 @@ func Test_BookClient_GetAllBook(t *testing.T) {
 		err:            nil,
 	}, {
 		name: "error while sending request",
-		mockHttpClient: func(m *mockHttpClient) *mockHttpClient {
+		mockHTTPClient: func(m *mockHTTPClient) *mockHTTPClient {
 			m.On("SendRequest", mock.Anything).Return("", errors.New("error"))
 			return m
 		},
@@ -55,9 +55,9 @@ func Test_BookClient_GetAllBook(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			m := &mockHttpClient{}
+			m := &mockHTTPClient{}
 			b := &bookClient{
-				client: tt.mockHttpClient(m),
+				client: tt.mockHTTPClient(m),
 			}
 			respStr, err := b.GetAllBooks("test")
 			if err != nil {
@@ -71,12 +71,12 @@ func Test_BookClient_GetAllBook(t *testing.T) {
 func Test_BookClient_GetBook(t *testing.T) {
 	tests := []struct {
 		name           string
-		mockHttpClient func(m *mockHttpClient) *mockHttpClient
+		mockHTTPClient func(m *mockHTTPClient) *mockHTTPClient
 		expectedString string
 		err            error
 	}{{
 		name: "success",
-		mockHttpClient: func(m *mockHttpClient) *mockHttpClient {
+		mockHTTPClient: func(m *mockHTTPClient) *mockHTTPClient {
 			m.On("SendRequest", mock.Anything).Return("book", nil)
 			return m
 		},
@@ -84,7 +84,7 @@ func Test_BookClient_GetBook(t *testing.T) {
 		err:            nil,
 	}, {
 		name: "error while sending request",
-		mockHttpClient: func(m *mockHttpClient) *mockHttpClient {
+		mockHTTPClient: func(m *mockHTTPClient) *mockHTTPClient {
 			m.On("SendRequest", mock.Anything).Return("", errors.New("error"))
 			return m
 		},
@@ -94,9 +94,9 @@ func Test_BookClient_GetBook(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			m := &mockHttpClient{}
+			m := &mockHTTPClient{}
 			b := &bookClient{
-				client: tt.mockHttpClient(m),
+				client: tt.mockHTTPClient(m),
 			}
 			respStr, err := b.GetBook("test", "isbn")
 			if err != nil {
@@ -110,7 +110,7 @@ func Test_BookClient_GetBook(t *testing.T) {
 func Test_BookClient_SaveBook(t *testing.T) {
 	tests := []struct {
 		name           string
-		mockHttpClient func(m *mockHttpClient) *mockHttpClient
+		mockHTTPClient func(m *mockHTTPClient) *mockHTTPClient
 		expectedString string
 		isbn           string
 		title          string
@@ -119,7 +119,7 @@ func Test_BookClient_SaveBook(t *testing.T) {
 		err            error
 	}{{
 		name: "success",
-		mockHttpClient: func(m *mockHttpClient) *mockHttpClient {
+		mockHTTPClient: func(m *mockHTTPClient) *mockHTTPClient {
 			m.On("SendRequest", mock.Anything).Return("success", nil)
 			return m
 		},
@@ -131,7 +131,7 @@ func Test_BookClient_SaveBook(t *testing.T) {
 		err:            nil,
 	}, {
 		name: "error while sending request",
-		mockHttpClient: func(m *mockHttpClient) *mockHttpClient {
+		mockHTTPClient: func(m *mockHTTPClient) *mockHTTPClient {
 			m.On("SendRequest", mock.Anything).Return("", errors.New("error"))
 			return m
 		},
@@ -145,9 +145,9 @@ func Test_BookClient_SaveBook(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			m := &mockHttpClient{}
+			m := &mockHTTPClient{}
 			b := &bookClient{
-				client: tt.mockHttpClient(m),
+				client: tt.mockHTTPClient(m),
 			}
 			respStr, err := b.SaveBook("test", tt.isbn, tt.title, tt.author, tt.units)
 			if err != nil {
@@ -161,25 +161,25 @@ func Test_BookClient_SaveBook(t *testing.T) {
 func Test_BookClient_DeleteBook(t *testing.T) {
 	tests := []struct {
 		name           string
-		mockHttpClient func(m *mockHttpClient) *mockHttpClient
+		mockHTTPClient func(m *mockHTTPClient) *mockHTTPClient
 		err            error
 	}{{
 		name: "success",
-		mockHttpClient: func(m *mockHttpClient) *mockHttpClient {
+		mockHTTPClient: func(m *mockHTTPClient) *mockHTTPClient {
 			m.On("Do", mock.Anything).Return(&http.Response{StatusCode: 204}, nil)
 			return m
 		},
 		err: nil,
 	}, {
 		name: "Unauthorized",
-		mockHttpClient: func(m *mockHttpClient) *mockHttpClient {
+		mockHTTPClient: func(m *mockHTTPClient) *mockHTTPClient {
 			m.On("Do", mock.Anything).Return(&http.Response{StatusCode: 401}, nil)
 			return m
 		},
 		err: errors.New("Unauthorized"),
 	}, {
 		name: "unable to delete book",
-		mockHttpClient: func(m *mockHttpClient) *mockHttpClient {
+		mockHTTPClient: func(m *mockHTTPClient) *mockHTTPClient {
 			m.On("Do", mock.Anything).Return(&http.Response{StatusCode: 500}, nil)
 			return m
 		},
@@ -188,9 +188,9 @@ func Test_BookClient_DeleteBook(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			m := &mockHttpClient{}
+			m := &mockHTTPClient{}
 			b := &bookClient{
-				client: tt.mockHttpClient(m),
+				client: tt.mockHTTPClient(m),
 			}
 			err := b.Delete("test", "isbn")
 			if err != nil {
