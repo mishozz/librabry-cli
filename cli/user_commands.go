@@ -142,7 +142,7 @@ func NewRegisterCmd(client client.UserClient) *cobra.Command {
 
 			respString, err := client.Register(email, password)
 			if err != nil {
-				fmt.Fprintf(cmd.OutOrStdout(), "Unable to fetch user with email %s", email)
+				fmt.Fprintf(cmd.OutOrStdout(), "Unable to register. Try again!")
 			} else {
 				fmt.Fprintf(cmd.OutOrStdout(), respString)
 			}

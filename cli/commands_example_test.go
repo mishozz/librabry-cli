@@ -109,3 +109,15 @@ func ExampleNewReturnBookCmd() {
 	// Output:
 	// Successfully returned your book
 }
+
+func ExampleNewRegisterCmd() {
+	mock := func(m *mockUserClient) *mockUserClient {
+		m.On("Register", mock.Anything, mock.Anything).Return("success", nil)
+		return m
+	}
+	m := &mockUserClient{}
+	loginCmd := NewRegisterCmd(mock(m))
+	loginCmd.Execute()
+	// Output:
+	// success
+}

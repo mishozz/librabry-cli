@@ -291,3 +291,40 @@ func Test_ReturnBook(t *testing.T) {
 		})
 	}
 }
+
+func Test_Register(t *testing.T) {
+	tests := []struct {
+		name           string
+		mockUserClient func(m *mockUserClient) *mockUserClient
+		expectedOutput string
+	}{{
+		name: "success",
+		mockUserClient: func(m *mockUserClient) *mockUserClient {
+			m.On("Register", mock.Anything, mock.Anything).Return("success", nil)
+			return m
+		},
+		expectedOutput: "success",
+	}, {
+		name: "wrong password or email",
+		mockUserClient: func(m *mockUserClient) *mockUserClient {
+			m.On("Register", mock.Anything, mock.Anything).Return("", errors.New("err"))
+			return m
+		},
+		expectedOutput: "Unable to register. Try again!",
+	}}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			m := &mockUserClient{}
+			registerCmd := NewRegisterCmd(tt.mockUserClient(m))
+			b := bytes.NewBufferString("")
+			registerCmd.SetOut(b)
+			registerCmd.Execute()
+			out, err := ioutil.ReadAll(b)
+			if err != nil {
+				t.Fatal(err)
+			}
+			assert.Equal(t, tt.expectedOutput, string(out))
+		})
+	}
+}
