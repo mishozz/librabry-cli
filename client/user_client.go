@@ -17,6 +17,7 @@ type UserClient interface {
 	ReturnBook(token, email, isbn string) error
 	GetAllUsers(token string) (string, error)
 	GetUser(token, email string) (string, error)
+	Register(email, password string) (string, error)
 }
 
 type userClient struct {
@@ -25,7 +26,8 @@ type userClient struct {
 
 // UserDetails holds email and password so we can parse it to json
 type UserDetails struct {
-	Email string `json:"email"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 // UnauthorizedErr is the error when the http call is unauthorized
@@ -38,7 +40,8 @@ var User UserClient = &userClient{
 
 func (u userClient) Login(email, password string) (string, error) {
 	user := &UserDetails{
-		Email: email,
+		Email:    email,
+		Password: password,
 	}
 	jsonData, err := json.Marshal(user)
 	if err != nil {
@@ -107,6 +110,24 @@ func (u userClient) GetAllUsers(token string) (string, error) {
 func (u userClient) GetUser(token, email string) (string, error) {
 	req, _ := http.NewRequest("GET", host+port+libraryApiV1+"users/"+email, nil)
 	setAuthHeader(token, req)
+
+	respString, err := u.client.SendRequest(req)
+	if err != nil {
+		return "", err
+	}
+	return respString, nil
+}
+
+func (u userClient) Register(email, password string) (string, error) {
+	user := &UserDetails{
+		Email:    email,
+		Password: password,
+	}
+	jsonData, err := json.Marshal(user)
+	if err != nil {
+		return "", err
+	}
+	req, _ := http.NewRequest("POST", host+port+libraryApiV1+"register", bytes.NewBuffer(jsonData))
 
 	respString, err := u.client.SendRequest(req)
 	if err != nil {

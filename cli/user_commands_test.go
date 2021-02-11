@@ -62,6 +62,14 @@ func (m *mockUserClient) GetUser(token, email string) (str string, err error) {
 	return args.Get(0).(string), args.Error(1)
 }
 
+func (m *mockUserClient) Register(email, password string) (str string, err error) {
+	args := m.Called(email, email)
+	if args.Get(0) == nil {
+		return
+	}
+	return args.Get(0).(string), args.Error(1)
+}
+
 func Test_GetAllUsers(t *testing.T) {
 	tests := []struct {
 		name           string
@@ -147,7 +155,7 @@ func Test_Login(t *testing.T) {
 			m.On("Login", mock.Anything, mock.Anything).Return("testToken", nil)
 			return m
 		},
-		expectedOutput: "Login succesful. Your token is: testToken",
+		expectedOutput: "testToken",
 	}, {
 		name: "wrong credentials",
 		mockUserClient: func(m *mockUserClient) *mockUserClient {

@@ -71,7 +71,7 @@ func ExampleNewLoginCmd() {
 	loginCmd := NewLoginCmd(mock(m))
 	loginCmd.Execute()
 	// Output:
-	// Login succesful. Your token is: success
+	// success
 }
 
 func ExampleNewLogoutCmd() {
