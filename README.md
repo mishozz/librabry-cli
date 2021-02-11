@@ -27,6 +27,7 @@ All of the flag used below are required for the specific commands and the cli ca
 
   - `library login -e=<your email> -p=<password>` - logs the user
   - `library logout -t=<your jwt token>` - logouts the user
+  - `library register -e=<your email> -p=<password>` - register the user
   - `library get-all -t=<your jwt token>` - show all books
   - `library get -i=<isbn> -t=<your jwt token` - shows book with the provided isbn
   - `library delete -i=<isbn> -t=<your jwt token` - deletes book with the provided isbn
@@ -57,3 +58,5 @@ All of the flag used below are required for the specific commands and the cli ca
    * example of the save command for book: `library save -i="123456" -n="Book Title" -a="Ivan Vazov" -u=12 -t="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoX3V1aWQiOiI2NTQwMmRlOS03MDI4LTQ5MzEtOTY4MS1iODkxNTUyN2NlYTMiLCJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MTA5ODA4NDcsInVzZXJfaWQiOjEsInVzZXJfcm9sZSI6IkFkbWluIn0.1uhHWJ81iG1UgCbqfZsPfwf-D5v5hh3oGpiEbshra18"`
 
   * example of the login command: `library login -e="misho@gmail.com" -p="12213"`
+  * example of the register command: `library login -e="misho@gmail.com" -p="12213"`
+  * example of the logout command: `library login -e="misho@gmail.com" -t="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoX3V1aWQiOiI2NTQwMmRlOS03MDI4LTQ5MzEtOTY4MS1iODkxNTUyN2NlYTMiLCJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MTA5ODA4NDcsInVzZXJfaWQiOjEsInVzZXJfcm9sZSI6IkFkbWluIn0.1uhHWJ81iG1UgCbqfZsPfwf-D5v5hh3oGpiEbshra18"`
